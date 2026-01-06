@@ -1,0 +1,13 @@
+Animation is the art of creating the illusion of movement from still images, using techniques like drawing, computer graphics, or manipulating objects, to bring characters and stories to life in media like films, games, and TV. It involves creating sequential frames (drawings, 3D models, etc.) that, when played rapidly, trick the eye into perceiving motion, ranging from classic hand-drawn styles (like Disney) to modern CGI and digital 2D
+
+Types of Animation
+Traditional (2D): Hand-drawn on paper or cells, photographed frame-by-frame (e.g., early Disney).
+Computer-Generated Imagery (CGI/3D): Creating characters and environments digitally, common in modern films.
+Stop-Motion: Manipulating physical objects (clay, puppets, cutouts) frame by frame (e.g., Claymation).
+Computer-Assisted 2D: Digital tools for drawing and "tweening" (filling in frames), blending traditional look with digital speed (e.g., modern Disney films). 
+How it Works
+Concept: Develop the story and key poses (keyframes).
+Drawing/Modeling: Create the individual drawings or 3D models for key moments.
+In-betweens (Tweening): Generate frames between keyframes for smooth motion, either manually or by software.
+Timing: Sequence frames to control the speed and rhythm of movement (e.g., "on twos" means each drawing is shown twice).
+Playback: Displaying frames rapidly (around 24 frames per second) creates the illusion of motion

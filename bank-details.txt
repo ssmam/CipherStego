@@ -1,0 +1,5 @@
+Account Holder: Jane Doe
+Account Number: 987654321
+Bank Name: Bank of America
+Routing Number: 026009775 (Example)
+Account Type: Checking
