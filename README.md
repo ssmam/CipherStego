@@ -2,8 +2,6 @@
 
 CryptoStego Transit is a Python-based GUI application that enables **secure file transfer** by combining **AES-256-GCM encryption** with **steganography** using Image, Text, Audio, or Video files as cover media.
 
-This tool is intended for **educational and cybersecurity project use**.
-
 ---
 
 ## System Requirements
@@ -43,7 +41,7 @@ pip install -r requirements.txt
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/<your-username>/CryptoStego-Transit.git
+git clone https://github.com/ssmam/CipherStego.git
 cd CryptoStego-Transit
 ```
 
@@ -122,4 +120,4 @@ Weak passwords are rejected by the application.
 
 ## License
 
-This project is provided for **educational purposes only**.
+This tool is intended for **educational and cybersecurity project use**.
