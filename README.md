@@ -1,4 +1,4 @@
-# CryptoStego Transit 
+# CipherStego Transit 
 
 CryptoStego Transit is a Python-based GUI application that enables **secure file transfer** by combining **AES-256-GCM encryption** with **steganography** using Image, Text, Audio, or Video files as cover media.
 
