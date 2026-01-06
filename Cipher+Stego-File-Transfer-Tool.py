@@ -599,7 +599,7 @@ class App(tk.Tk):
 
         tk.Label(
             title_frame,
-            text="🔒 CryptoStego Transit",
+            text="🔒 CipherStego Transit",
             font=FONTS["title"],
             fg=THEME["accent"],
             bg=THEME["bg_window"]
@@ -988,3 +988,4 @@ class App(tk.Tk):
 if __name__ == "__main__":
     app = App()
     app.mainloop()
+
