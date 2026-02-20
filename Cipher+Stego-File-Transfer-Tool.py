@@ -222,81 +222,7 @@ def extract_zwc_from_text(path: str) -> bytes:
     except:
         return b''
 
-# ===================== VIDEO STEG =====================
-def embed_payload_in_video_mp4(cover_video: str, out_video: str, payload_text: str):
-    if not CV2_AVAILABLE:
-        raise RuntimeError("pip install opencv-python")
-    
-    cap = cv2.VideoCapture(cover_video)
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    out = cv2.VideoWriter(out_video, fourcc, fps, (width, height))
-    
-    data_bits = ''.join(format(byte, '08b') for byte in payload_text.encode('ascii', errors='ignore'))
-    bit_idx = 0
-    
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-        
-        h, w = frame.shape[:2]
-        for i in range(min(h, 50)):  # First 50 rows
-            for j in range(w):
-                for c in range(3):
-                    if bit_idx < len(data_bits):
-                        frame[i, j, c] = (frame[i, j, c] & 0xFE) | int(data_bits[bit_idx])
-                        bit_idx += 1
-                    if bit_idx >= len(data_bits):
-                        break
-                if bit_idx >= len(data_bits):
-                    break
-            if bit_idx >= len(data_bits):
-                break
-        
-        out.write(frame)
-        if bit_idx >= len(data_bits):
-            break
-    
-    cap.release()
-    out.release()
-    cv2.destroyAllWindows()
 
-def extract_payload_from_video_mp4(video_path: str) -> bytes:
-    if not CV2_AVAILABLE:
-        raise RuntimeError("pip install opencv-python")
-    
-    cap = cv2.VideoCapture(video_path)
-    bits = ''
-    
-    frame_count = 0
-    while cap.isOpened() and len(bits) < 100000 and frame_count < 100:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        
-        h, w = frame.shape[:2]
-        for i in range(min(h, 50)):
-            for j in range(w):
-                for c in range(3):
-                    bits += str(frame[i, j, c] & 1)
-                    if len(bits) > 100000:
-                        break
-                if len(bits) > 100000:
-                    break
-            if len(bits) > 100000:
-                break
-        frame_count += 1
-    
-    cap.release()
-    cv2.destroyAllWindows()
-    
-    bytes_data = bytearray()
-    for i in range(0, len(bits) - len(bits) % 8, 8):
-        bytes_data.append(int(bits[i:i+8], 2))
-    return bytes(bytes_data)
 
 # ===================== NETWORK =====================
 def send_file_over_tcp(host: str, port: int, path: str, status_callback=None):
@@ -478,8 +404,6 @@ class PreviewWindow:
             self._show_text_preview(self.content_subframe)
         elif file_ext == '.wav' and Pygame_AVAILABLE:
             self._show_audio_preview(self.content_subframe)
-        elif file_ext == '.mp4' and CV2_AVAILABLE:
-            self._show_video_preview(self.content_subframe)
         else:
             tk.Label(self.content_subframe, text="✅ STEGO FILE READY\n🔓 Click DECRYPT to extract secret", 
                     font=FONTS["heading"], fg=THEME["success"],
@@ -569,14 +493,6 @@ class PreviewWindow:
         except:
             pass
     
-    def _show_video_preview(self, parent):
-        tk.Label(parent, text="🎥 VIDEO STEG FILE (MP4)", 
-                font=FONTS["heading"], fg=THEME["success"],
-                bg=THEME["preview_bg"]).pack(pady=20)
-        
-        tk.Label(parent, text="✅ Video stego ready for extraction\n📹 Hidden data embedded in frames",
-                font=FONTS["body"], fg=THEME["fg_sub"],
-                bg=THEME["preview_bg"]).pack(expand=True, pady=20)
     
     def _decrypt(self):
         self.window.destroy()
@@ -586,7 +502,6 @@ class PreviewWindow:
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Cyber project proposal - 0xCipherLink v8.2")
         self.geometry("1000x700")
         self.configure(bg=THEME["bg_window"])
         self.minsize(950, 650)
@@ -599,7 +514,7 @@ class App(tk.Tk):
 
         tk.Label(
             title_frame,
-            text="🔒 CipherStego Transit",
+            text="🔒 CryptoStego Transit",
             font=FONTS["title"],
             fg=THEME["accent"],
             bg=THEME["bg_window"]
@@ -728,12 +643,7 @@ class App(tk.Tk):
                       bg=THEME["sender_bg"], fg=THEME["fg_main"],
                       selectcolor="#bfdbfe", font=FONTS["body"]
                       ).pack(anchor="w", padx=12, pady=3)
-        tk.Radiobutton(method_frame, text="🎥 Video LSB (MP4)", 
-                      variable=self.transport_var, value="stego_video",
-                      bg=THEME["sender_bg"], fg=THEME["fg_main"],
-                      selectcolor="#bfdbfe", font=FONTS["body"]
-                      ).pack(anchor="w", padx=12, pady=3)
-
+        
         btn_frame = tk.Frame(parent, bg=THEME["sender_bg"])
         btn_frame.pack(fill="x", pady=20)
         ThemedButton(btn_frame, text="🚀 SEND STEGO PAYLOAD",
@@ -742,7 +652,8 @@ class App(tk.Tk):
     def _build_receiver(self, parent):
         tk.Label(parent, text="📥 RECEIVER CONSOLE", 
                 font=("Segoe UI", 16, "bold"), fg=THEME["receiver_text"],
-                bg=THEME["receiver_bg"]).pack(anchor="w", padx=20, pady=(15, 10))
+                bg=THEME["receiver_bg"]).pack(anchor="w", padx=20, pady=(15, 10)
+                )
 
         settings_frame = tk.LabelFrame(parent, text="⚙️ Receiver Settings", 
                                        font=FONTS["heading"], fg=THEME["receiver_text"],
@@ -830,8 +741,6 @@ class App(tk.Tk):
             ftypes = [("Text files", "*.txt *.md")]
         elif mode == "stego_audio":
             ftypes = [("WAV Audio", "*.wav")]
-        elif mode == "stego_video":
-            ftypes = [("MP4 Video", "*.mp4")]
         path = filedialog.askopenfilename(filetypes=ftypes)
         if path:
             self.cover_file.delete(0, "end")
@@ -894,13 +803,6 @@ class App(tk.Tk):
                 stego_path += ".wav"
                 embed_payload_in_audio_wav(cover_path, stego_path, b64_data)
                 self.log("✅ Audio WAV LSB embedding done")
-            elif transport == "stego_video":
-                if not CV2_AVAILABLE:
-                    self.log("❌ Install: pip install opencv-python")
-                    return
-                stego_path += ".mp4"
-                embed_payload_in_video_mp4(cover_path, stego_path, b64_data)
-                self.log("✅ Video MP4 LSB embedding done")
 
             self.log(f"📤 Sending to {host}:{port}...")
             send_file_over_tcp(host, port, stego_path, self.log)
@@ -952,9 +854,6 @@ class App(tk.Tk):
             elif file_ext == '.wav':
                 self.log("🎵 Extracting from audio WAV...")
                 raw_bytes = extract_payload_from_audio_wav(stego_path)
-            elif file_ext == '.mp4' and CV2_AVAILABLE:
-                self.log("🎥 Extracting from video MP4...")
-                raw_bytes = extract_payload_from_video_mp4(stego_path)
             else:
                 self.log("❌ Unsupported file type")
                 return
@@ -988,5 +887,3 @@ class App(tk.Tk):
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-
-
