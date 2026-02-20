@@ -607,7 +607,7 @@ class App(tk.Tk):
 
         tk.Label(
             title_frame,
-            text="Secure File Transfer using Image/Text/Audio/Video Steganography",
+            text="Secure File Transfer using Image/Text/Audio Steganography",
             font=FONTS["subtitle"],
             fg=THEME["fg_sub"],
             bg=THEME["bg_window"]
@@ -988,4 +988,5 @@ class App(tk.Tk):
 if __name__ == "__main__":
     app = App()
     app.mainloop()
+
 
