@@ -1,6 +1,6 @@
 # CipherStego Transit 
 
-CipherStego Transit is a Python-based GUI application that enables **secure file transfer** by combining **AES-256-GCM encryption** with **steganography** using Image, Text, Audio, or Video files as cover media.
+CipherStego Transit is a Python-based GUI application that enables **secure file transfer** by combining **AES-256-GCM encryption** with **steganography** using Image, Text, or Audio files as cover media.
 
 ---
 
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 
 > Note:
 >
-> * Image & Video steganography require `opencv-python`
+> * Image steganography require `opencv-python`
 > * Image preview requires `Pillow`
 > * Audio preview requires `pygame`
 
@@ -71,7 +71,7 @@ The graphical interface will launch automatically.
 4. Select:
 
    * A **secret file** (file to be protected)
-   * A **cover file** (image / text / audio / video)
+   * A **cover file** (image / text / audio )
 5. Choose the steganography method
 6. Click **SEND STEGO PAYLOAD**
 
